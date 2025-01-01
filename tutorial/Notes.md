@@ -57,3 +57,36 @@ This is where OpenTelemetry comes in.
 | Event       | - It is a discrete action happening at any moment in time.<br>- For example, a user initiating a payment on an eCommerce platform.<br>- With additional metadata, events bring out really useful information such as: _What is the most ordered item ?_                                                                                                                                             |
 | Logs        | They come directly from the app, exporting detailed data and detailed context around an event.                                                                                                                                                                                                                                                                                                      |
 | Traces      | - They follow a request, starting from the initial request to the returned output.<br>- They record the casual chain of events to **determine relationships between different entities**.<br>- They are very valuable for highlighting inefficiencies, bottlenecks, and roadblocks in the user experience.<br>- They showcase end-to-end latency of indivisual cores in a distributed architecture. |
+
+However, getting that data is very difficult. We will have to manually instrument every single service one by one layer by layer. This will take as much time as writing the code itself which is annoying.
+
+## History
+
+| Project      | Release                                                                 | Benefits                                                                                                                                                                                 | Limits                                                                                                        |
+| ------------ | ----------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Open Tracing | Released in 2016 as CNCF project with focus around distributed tracing. | - The libraries were lightweight and simple and they could fit any use case.<br>- Made it easier to instrument data.                                                                     | Made it hard to instrument software that was shipped as binaries without a lot of manual engineering work.    |
+| Open Census  | Released in 2018, open sourced out of Google.                           | - Supported both the capturing of retracing permission and metrics.<br>- Made it easierr to get telemetry data from software that was shipped as binaries like Kubernetes and databases. | Made it hard to use the API to implement custom instrumentations which were not part of the default use-case. |
+
+Both projects were able to make Observability easy for modern applications and eventually adopted heavily for distributed tracing by the software industry. However, developers had to choose between the two options with pros and cons.
+
+It turns out that the approaches of these two projects were complimentary (rather than contradictory). There was no reason why we couldn't have both the abstract vendor natural API and a well supported default implementation.
+
+In late 2019, the two projects were merged to form Open Telemetry. This brought forth the idea of having a single standard for observability instead of two competing standards.
+
+## Project Setup
+
+Zipkin Docker Installation
+
+```shell
+docker pull openzipkin/zipkin
+```
+
+```shell
+docker run --name zipkin -d -p 9411:9411 openzipkin/zipkin
+```
+
+Setting Up OpenTelemetry Libraries
+
+```shell
+npm i @opentelemetry/core @opentelemetry/node @opentelemetry/plugin-http @opentelemetry/plugin-https @opentelemetry/exporter-zipkin @opentelemetry/tracing @opentelemetry/plugin-express express
+```
