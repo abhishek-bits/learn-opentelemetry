@@ -73,7 +73,7 @@ It turns out that the approaches of these two projects were complimentary (rathe
 
 In late 2019, the two projects were merged to form Open Telemetry. This brought forth the idea of having a single standard for observability instead of two competing standards.
 
-## Project Setup
+## NodeJs Project Setup
 
 Zipkin Docker Installation
 
@@ -90,7 +90,7 @@ docker run --name zipkin -d -p 9411:9411 openzipkin/zipkin
 Setting Up OpenTelemetry Libraries
 
 ```shell
-npm i @opentelemetry/core @opentelemetry/node @opentelemetry/plugin-http @opentelemetry/plugin-https @opentelemetry/exporter-zipkin @opentelemetry/tracing @opentelemetry/plugin-express express
+npm install @opentelemetry/api @opentelemetry/sdk-node @opentelemetry/sdk-trace-node @opentelemetry/exporter-zipkin @opentelemetry/instrumentation-http @opentelemetry/instrumentation-express express
 ```
 
 ## Distributed Tracing
@@ -154,3 +154,38 @@ It will carry certain information that helps identify the current span and trace
 It is the mechanism using which we will bundle up our context and we'll transfer this bundled information accross services.
 
 Togther, both Context and Propagation represent the engine behind Distributed Tracing.
+
+## Tracing Initialization
+
+All tracing initialization should happen before our application code runs. The easiest way to do this is to initialize tracing in a separate file:
+
+```js
+// File name: tracing.js
+
+"use strict";
+
+const { ZipkinExporter } = require("@opentelemetry/exporter-zipkin");
+const {
+  ExpressInstrumentation,
+} = require("@opentelemetry/instrumentation-express");
+const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
+const { NodeSDK } = require("@opentelemetry/sdk-node");
+
+// Initialize the OpenTelemetry SDK
+const nodeSDK = new NodeSDK({
+  traceExporter: new ZipkinExporter({
+    url: "http://localhost:9411/api/v2/spans",
+    serviceName: "opentelemetry-tutorial",
+  }),
+  instrumentations: [new HttpInstrumentation(), new ExpressInstrumentation()],
+});
+
+// Start the SDK
+nodeSDK.start();
+```
+
+then run the application using:
+
+```shell
+node -r ./tracing.js app.js
+```
