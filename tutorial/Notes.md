@@ -77,6 +77,8 @@ In late 2019, the two projects were merged to form Open Telemetry. This brought 
 
 Zipkin Docker Installation
 
+> Zipkin is a distributed tracing system that helps gether timing data that is used to troubleshoot latency problems in service architectures. It was originally created by Twitter and is currently run by the Open-Zipkin volunteer organization.
+
 ```shell
 docker pull openzipkin/zipkin
 ```
@@ -90,3 +92,65 @@ Setting Up OpenTelemetry Libraries
 ```shell
 npm i @opentelemetry/core @opentelemetry/node @opentelemetry/plugin-http @opentelemetry/plugin-https @opentelemetry/exporter-zipkin @opentelemetry/tracing @opentelemetry/plugin-express express
 ```
+
+## Distributed Tracing
+
+In Software Engineering, tracing involves a specialized use of logging to record information about programs execution. This information is typically used by programmers to debug by using the information contained in a trace log to troubleshoot any problem that might arise with a particular software or app.
+
+Distributed Tracing is a method used to debug and monitor applications built using a microservice architecture. Helps pin-point any failures occurred or what causes poor performance.
+
+Being able to get tracing data telemetry is pretty important to the oveall performance of an app.
+
+OpenTelemetry:
+
+- helps in distributed tracing by finding a common set of APIs, SDKs, and wired protocols.
+- gives organizations a single, well supported integration service for end-to-end distributed tracing telemetry.
+
+In general, once the traces are implemented into applications they are set to record timing and metadata about operations that take place.
+
+As an example, a service records the in-time of a request and the time at which the response was sent. Such an information is referred to as a _Span_. Spans share inherent relationships with each other. In a tracing tool, Spans are represented as horizontal bars. This helps us identify _latencies_ which are key indicators to the performance of an application.
+
+## Context and Propagation
+
+These terminologies help us learn distributed tracing a lot better.
+
+The components in a distributed system should be able to:
+
+- collect,
+- store, and
+- transfer
+
+metadata.
+
+We refer to this metadata as **Cotext**.
+
+### Context
+
+It is divided into two types:
+
+#### Span Context
+
+Represents the data required for moving trace accross service boundaries. It contains the following metadata:
+
+- Trace ID
+- Span ID
+- Trace Flags
+- Trace State
+
+#### Correlation Context
+
+Carries user-defined properties, such as:
+
+- Customer ID
+- Host name
+- Region
+
+and other telemetry that gives us application specific performance insights.
+
+It will carry certain information that helps identify the current span and trace.
+
+### Propagation
+
+It is the mechanism using which we will bundle up our context and we'll transfer this bundled information accross services.
+
+Togther, both Context and Propagation represent the engine behind Distributed Tracing.
