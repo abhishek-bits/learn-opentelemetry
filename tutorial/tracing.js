@@ -1,7 +1,9 @@
 'use strict';
 
+const { Resource, SEMRESATTRS_SERVICE_NAME } = require('@opentelemetry/resources');
 const { ZipkinExporter } = require("@opentelemetry/exporter-zipkin");
 const { ExpressInstrumentation } = require("@opentelemetry/instrumentation-express");
+const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
 const { HttpInstrumentation } = require("@opentelemetry/instrumentation-http");
 const { NodeSDK } = require("@opentelemetry/sdk-node");
 
@@ -9,7 +11,9 @@ const { NodeSDK } = require("@opentelemetry/sdk-node");
 const nodeSDK = new NodeSDK({
     traceExporter: new ZipkinExporter({
         url: 'http://localhost:9411/api/v2/spans',
-        serviceName: 'opentelemetry-tutorial'
+    }),
+    resource: new Resource({
+        [SemanticResourceAttributes.SERVICE_NAME]: 'opentelemetry-tutorial',
     }),
     instrumentations: [
         new HttpInstrumentation(),
