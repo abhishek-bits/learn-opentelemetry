@@ -1,6 +1,6 @@
 'use strict';
 
-const { Resource, SEMRESATTRS_SERVICE_NAME } = require('@opentelemetry/resources');
+const { Resource } = require('@opentelemetry/resources');
 const { ZipkinExporter } = require("@opentelemetry/exporter-zipkin");
 const { ExpressInstrumentation } = require("@opentelemetry/instrumentation-express");
 const { SemanticResourceAttributes } = require('@opentelemetry/semantic-conventions');
